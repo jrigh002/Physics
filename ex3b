@@ -1,0 +1,33 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sunday Apr 5 23:26:37 2015
+
+@author: Joshua
+"""
+
+import numpy as np
+import math
+import matplotlib.pyplot as plt
+
+
+
+g = 9.81 #in meters per second
+t_1 = 0. #in seconds
+t_2 = 0. #in seconds
+d = 0. #in meters
+h = 800. #in meters
+v_1 = input("Enter minumum (initial) velocity in meters per second: ")
+v_2 = input("Enter maximum (final) velocity in meters per second: ")
+
+
+#calculates time of flight and distance traveled in two sections;
+#time of acceleration and time at max velocity
+
+d = (v_2**2 - v_1**2)/(2.*g)
+t_1 = 2.*d/(v_1 + v_2)
+
+d_2 = h - d
+
+t_2 = d_2/v_2
+
+print 'Time of flight= ', t_1 + t_2, ' seconds'
