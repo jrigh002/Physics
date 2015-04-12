@@ -1,0 +1,35 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Apr 8 11:21:39 2015
+
+@author: Joshua
+"""
+from pylab import plot, xlabel, ylabel, show
+x = 0.
+i = 0.
+j = 0.
+grade = 0.
+histogram =[]
+
+
+homework=[10, 10, 8, 9.5, 3, 9, 0, 6]
+midterm = [10, 10, 10, 10, 8, 5, 10, 7]
+final=[9, 10, 10, 6, 10, 6, 8, 9]
+for x in range(0, 8):
+    grade = (homework[x]+midterm[x]+final[x])/3.
+    if grade < 6.:
+        i += 1.
+        
+    if grade > 9.5:
+        j += 1.
+        
+    print grade
+    histogram.append(grade)
+print 'Number of students who failed: ',i
+print 'Number of students who were outdatanding: ',j
+
+plot(histogram)
+xlabel("student")
+ylabel("Grade")
+show()
+plot.savefig('newplot.png',format='png')
