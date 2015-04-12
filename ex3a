@@ -1,0 +1,17 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sunday Apr 5 23:26:37 2015
+
+@author: Joshua
+"""
+
+import numpy as np
+import math
+import matplotlib.pyplot as plt
+
+h = 800. #in meters
+t = 0. #in seconds
+g = 9.81 # in meters per second squared
+t = (h/(1./2.*g))**(.5)
+
+print 'Time of flight= ',t, ' seconds'
