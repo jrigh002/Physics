@@ -1,0 +1,83 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Apr 13 16:09:21 2015
+
+@author: Joshua
+"""
+import numpy as np
+import math
+
+from math import sin
+from math import sqrt
+from scipy import integrate
+from scipy.integrate import trapz
+from scipy.integrate import simps
+from scipy.integrate import quad
+
+
+
+def f(x):
+	return x**4 - 2.*x + 1.
+
+
+a = 0.
+b = 2.
+n = 10
+
+h = (b - a) / float(n)
+I = f(a) + f(b)
+for k in range(1,n):
+	I = I + 2. * f(a + k*h)
+
+I = I * 0.5 * h
+
+x = np.array([0,.2, .4, .6, .8, 1., 1.2, 1.4, 1.6, 1.8, 2.])
+y = x**4 - 2.*x + 1.
+
+i2 = np.trapz(y, x)
+
+error = (i2 - 4)/4
+
+
+def simpsonsRule(n):
+    a,b = bounds()
+    sum = float()
+    sum += f(a)
+    sum += f(b)
+    width=(b-a)/(2*n)
+    oddSum = float()
+    evenSum = float()
+    for i in range(1,int(n)):
+        oddSum += f(2*width*i+a)
+    sum += oddSum * 2
+    for i in range(1,int(n+1)):
+        evenSum += f(width*(-1+2*i)+a)
+    sum += evenSum * 4
+    return sum * width/3
+
+def bounds():
+
+    a = 0
+    b = 2.
+    return a,b
+
+def f(x):
+
+    return x**4 - 2.*x + 1.
+
+a = 0.
+b = 2.
+N = 10
+
+
+x2 = np.array([0,.2, .4, .6, .8, 1., 1.2, 1.4, 1.6, 1.8, 2.])
+y2 = x**4 - 2.*x + 1.
+
+simps(y, x)
+
+
+
+print 'result I=',I
+print 'result I=', i2
+print 'result I=', simpsonsRule(n)
+print 'result I=', simps(y2,x2)
