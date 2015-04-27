@@ -1,0 +1,90 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Apr 23 14:08:18 2015
+
+@author: Joshua
+"""
+
+import numpy as np
+import matplotlib.pylab as plt
+import math
+from math import pi,sqrt
+from sympy import *
+
+
+ax = plt.subplot(111)
+bx = plt.subplot(111)
+r = 0.
+distance = 10.   # in cm 
+size = 1. * 100. # size of pic in cm
+npixel = 100
+e = 8.854187817 #C^2/(N*m^2)
+dx = size / float(npixel)
+x1c = size / 2. - distance / 2. 
+y1c = size / 2. 
+x2c = size / 2. + distance / 2. 
+y2c = size / 2. 
+xi = 1.              # in cm 
+ai = 1.              # in cm 
+
+def f(x,y):
+
+    return 1/(4*pi*(sqrt( (x - x1c)**2 + (y - y1c)**2)))
+    
+
+
+xi_both = np.zeros(shape = (npixel,npixel)).astype('float')
+
+for j in range(npixel):        
+	y = float(j) * dx   
+	for i in range(npixel):
+      
+            x = float(i) * dx
+            q1=1.
+            q2=-1.
+            r1 = np.sqrt( (x - x1c)**2 + (y - y1c)**2)
+            
+            r2 = np.sqrt( (x - x2c)**2 + (y - y2c)**2)
+            xi1 = xi * q1/(4*pi*r1)
+            xi2 = xi * q2/(4*pi*r2)
+            xi_both[j,i] = xi1 + xi2
+
+plt.imshow(xi_both,origin='lower',extent=([0,size,0,size]))
+plt.gray()
+ax.set_xlabel('x [cm]')
+ax.set_ylabel('y [cm]')
+
+x,y = symbols('x y')
+w = f(x,y)
+E = -1.0*diff(w,x,y)
+
+
+# This is calculated from the coded derivative but for input purposes I had to enter it manually
+def d(a,b):
+    return -0.25*(a - 45.0)*(3*b - 150.0)/(pi*e*((a - 45.0)**2 + (b - 50.0)**2)**(5/2))
+
+ai_both = np.zeros(shape = (npixel,npixel)).astype('float')
+
+for j in range(npixel):       
+	b = float(j) * dx   
+	for i in range(npixel):
+         
+            a = float(i) * dx
+            q1=1.
+            q2=-1.
+            r1 = np.sqrt( (a - x1c)**2 + (b - y1c)**2)
+            
+            r2 = np.sqrt( (a - x2c)**2 + (b - y2c)**2)
+            ai1 = ai * q1*-0.25*(a - 45.0)*(3*b - 150.0)/(pi*r1**5/2)
+            ai2 = ai * q2*-0.25*(a - 45.0)*(3*b - 150.0)/(pi*r2**5/2)
+            ai_both[j,i] = ai1 + ai2
+
+
+
+
+print 'Energy =',E
+
+plt.imshow(ai_both,origin='lower',extent=([0,size,0,size]))
+plt.gray()
+bx.set_xlabel('x [cm]')
+bx.set_ylabel('y [cm]')
