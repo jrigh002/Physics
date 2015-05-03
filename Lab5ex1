@@ -1,0 +1,100 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Apr 28 17:12:45 2015
+
+@author: Joshua
+"""
+
+from numpy import *
+
+from matplotlib.pyplot import *
+
+x = linspace(0, 1, 200)
+
+def f(x):
+
+	return 924*x**6 - 2772*x**5 + 3150*x**4 - 1680*x**3 + 420*x**2 - 42*x + 1
+
+def f_prim(x):
+
+	return 5544*x**5 - 13860*x**4 + 12600*x**3 - 5040*x**2 + 840*x - 42
+
+y = f(x)
+
+figure()
+plot(x,y)
+plt.savefig('Lab5.png',format='png')
+
+#using newton's method, I take six equally spaced points to be my guesses.
+x_old = 0.
+i = 0
+eps = 1.
+
+while eps > 1.e-10:
+	x = x_old - f(x_old)/f_prim(x_old)
+	
+	eps = abs(x_old - x)
+	x_old = x
+	i +=1
+print 'root=', x
+ 
+x_old = .2
+i = 0
+eps = 1.
+
+while eps > 1.e-10:
+	x = x_old - f(x_old)/f_prim(x_old)
+
+	eps = abs(x_old - x)
+	x_old = x
+	i +=1
+print 'root=', x
+
+x_old = .4
+i = 0
+eps = 1.
+
+while eps > 1.e-10:
+	x = x_old - f(x_old)/f_prim(x_old)
+	
+	eps = abs(x_old - x)
+	x_old = x
+	i +=1
+print 'root=', x
+
+x_old = 0.6
+i = 0
+eps = 1.
+
+while eps > 1.e-10:
+	x = x_old - f(x_old)/f_prim(x_old)
+	
+	eps = abs(x_old - x)
+	x_old = x
+	i +=1
+print 'root=', x
+
+x_old = 0.8
+i = 0
+eps = 1.
+
+while eps > 1.e-10:
+	x = x_old - f(x_old)/f_prim(x_old)
+	
+	eps = abs(x_old - x)
+	x_old = x
+	i +=1
+print 'root=', x
+
+x_old = 1.0
+i = 0
+eps = 1.
+
+while eps > 1.e-10:
+	x = x_old - f(x_old)/f_prim(x_old)
+	
+	eps = abs(x_old - x)
+	x_old = x
+	i +=1
+print 'root=', x
+ 
