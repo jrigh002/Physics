@@ -1,0 +1,84 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Thu May 07 12:43:41 2015
+
+@author: Joshua
+"""
+
+import numpy as np
+import matplotlib.pyplot as plt
+import math
+from numpy import sin, pi
+from scipy import signal
+
+
+def dft(y):
+    N = len(y)
+    
+    c = np.zeros(N//2+1,complex)
+    for k in range(N//2+1):
+        for n in range(N):
+            c[k] += y[n]*np.exp(-2j*np.pi*k*n/N)
+            
+    return c
+
+x = np.linspace(0.,1.,20)
+H = 4./pi
+y = 2*(H*x-H*((x)-1)-1)
+y -= (np.sum(x)/float(len(x)))  
+
+
+def dft2(w):
+    N = len(w)
+    
+    c = np.zeros(N//2+1,complex)
+    for k in range(N//2+1):
+        for n in range(N):
+            
+            c[k] += w[n]*np.exp(-2j*np.pi*k*n/N)
+            
+    return c
+
+x = np.linspace(0.,1.,20)
+w = x               
+w -= (np.sum(x)/float(len(x)))    
+
+
+def dft3(q):
+    N = len(q)
+    
+    c = np.zeros(N//2+1,complex)
+    for k in range(N//2+1):
+        for n in range(N):
+            c[k] += q[n]*np.exp(-2j*np.pi*k*n/N)
+            
+    return c 
+x = np.linspace(0.,1.,1000)
+q = [0 for i in range(len(x))]
+for i in range(len(x)):
+    q[i] = sin(pi*x[i])* sin(20*pi*x[i])
+q -= (np.sum(x)/float(len(x)))
+
+plt.figure(1)
+coeff = dft(y)
+plt.plot(np.arange(len(coeff)),np.abs(coeff)**2,linewidth=3)
+
+t = np.linspace(0, 1, 500, endpoint=False)
+plt.figure(2)
+plt.plot(t, signal.square(2 * np.pi * 5 * t))
+plt.ylim(-2, 2)
+
+plt.figure(3)
+coeff = dft2(w)
+plt.plot(np.arange(len(coeff)),np.abs(coeff)**2,linewidth=3)
+
+t = np.linspace(0, 1, 500)
+plt.figure(4)
+plt.plot(t, signal.sawtooth(2 * np.pi * 5 * t))
+
+plt.figure(5)
+coeff = dft3(q)
+plt.plot(np.arange(len(coeff)),np.abs(coeff)**2,linewidth=3)
+
+plt.figure(6)
+plt.plot(x,q)
