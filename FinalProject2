@@ -1,0 +1,128 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Mon May 25 15:51:40 2015
+
+@author: Joshua
+"""
+import numpy as np
+import math
+from math import *
+from math import atan
+from math import cos
+from math import sin
+from math import sqrt
+
+
+'''
+Part of the reason it has been difficult to model the interactions as a function of 
+real units was the ability to use the gravitational constant. Here the calculations are made using the true astronomical
+units so that all adjustments of scale can be made in terms of a single unit.
+'''
+
+G = 6.67428e-11           # The universal gravitational constant.
+AU = (149.6e6 * 1000)     # 1 Astronomical Unit = 149.6 million km.
+Map_Size = 2500 / AU
+
+mass1 = Interraction()
+mass1.name = 'Mass 1'
+mass1.mass = 1.5 * 10**27
+mass1.px = 0.30*(AU/2)
+mass1.py = 0.10*(AU/2)
+mass1.pencolor('green')
+
+mass2 = Interraction()
+mass2.name = 'Mass 2'
+mass2.mass = 2.0 * 10**27
+mass2.px = -.1*(AU/2)
+mass2.py = -.2*(AU/2)
+mass2.pencolor('blue')
+
+
+mass3 = Interraction()
+mass3.name = 'Mass 3'
+mass3.mass = 2.5 * 10**27
+mass3.px = -0.1 * (AU/2)
+mass3.py = 0.1 * (AU/2)
+mass3.pencolor('red')
+
+Iterate([mass1, mass2, mass3])
+'''
+Though most programs solving differentials use iteration, some I've seen use it as a standalone function.
+This program takes the information from each mass and then inputs it through the iteration function 
+    which in turn applies the information to the Body Class.
+'''
+'''
+I used a Body class structure under the sugesstion that it would be good for defining and updating objects.
+This shares the simple structure of the functions we've used but also allows sub routines. 
+'''
+class Interraction(Body):
+
+    vx = 0.0  #m/s
+    vy = 0.0  #m/s
+    px = 0.0  #meters
+    py = 0.0  #meters
+    dx = 0.0  #meters
+    dy = 0.0  #meters
+    
+    def Gravitational_Force(mass_c, objects):
+        """
+        This records the interraction of one body on another. The options for modeling interaction include either using a central force,
+        or defining the motion in terms of the velocity of the other mass. Here, the information of the other system is necessary to 
+        updating the information. 
+        """
+        # Distance between objects.
+        x_mass = mass_c.px 
+        y_mass = mass_c.py
+        x_objects = objects.px 
+        y_objects = objects.py
+        dx = (x_objects-x_mass)
+        dy = (y_objects-y_mass)
+        
+
+        # Direction of the force in terms of cosine, and sine.
+        angle_direction = atan2(dy, dx)
+        fx = cos(angle_direction) * G * mass_c.mass * objects.mass / (math.sqrt(dx**2 + dy**2)**2)
+        fy = sin(angle_direction) * G * mass_c.mass * objects.mass / (math.sqrt(dx**2 + dy**2)**2)
+        return fx, fy
+
+def Iterate(bodies):
+
+    interval = 86400 #In seconds, needs to be large to correspond to cosmic scale.
+    step = 1
+    while True:
+        dx = 0
+        dy = 0
+        
+        step += 1*(math.sqrt(dx**2 + dy**2))
+        
+        '''        
+        Addaptive timestep based on the distance between objects and the farther apart they are, 
+            the wider steps we can take.
+        This is not a traditional timestep, but without an integrating function, its difficult to implement.
+        However, this solution provides an answer to the need of using less processing power for numerically
+            solving differential equations.
+        '''
+        force = {}
+        for mass in bodies:
+            # Sums the force on the mass
+            total_fx = 0.0
+            total_fy = 0.0
+            for objects in bodies:
+                fx, fy = mass.Gravitational_Force(objects)
+                total_fx = total_fx + fx
+                total_fy = total_fy + fy
+
+            # Total force on mass
+            force[mass] = (total_fx, total_fy)
+
+        # Updating the velocity vectors.
+        for mass in bodies:
+            fx, fy = force[mass]
+            mass.vx = mass.vx + (fx / mass.mass * interval)
+            mass.vy = mass.vy + (fy / mass.mass * interval)
+
+            # Update position of subject mass (does not update other objects)
+            mass.px = mass.px + mass.vx * interval
+            mass.py = mass.py + mass.vy * interval
+            mass.goto(mass.px*Map_Size, mass.py*Map_Size)
+            mass.dot(2)
